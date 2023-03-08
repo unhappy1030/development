@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "limits": "c",
+        "iostream": "cpp",
+        "fstream": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "new": "cpp",
+        "1.C": "cpp",
+        "holy_shit c": "c"
+    }
+}
