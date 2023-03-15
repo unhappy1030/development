@@ -15,10 +15,7 @@
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "problemMatcher": {
                 "fileLocation": [
                     "relative",
@@ -69,10 +66,9 @@
         },
         {
             "type": "cppbuild",
-            "label": "C/C++: g++.exe 활성 파일 빌드",
-            "command": "C:\\MinGW\\bin\\g++.exe",
+            "label": "C/C++: gcc.exe 활성 파일 빌드",
+            "command": "C:\\MinGW\\bin\\gcc.exe",
             "args": [
-                "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
                 "-o",
@@ -92,7 +88,6 @@
             "label": "C/C++: g++.exe 활성 파일 빌드",
             "command": "C:\\MinGW\\bin\\g++.exe",
             "args": [
-                "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
                 "-o",
@@ -105,14 +100,18 @@
                 "$gcc"
             ],
             "group": "build",
-            "detail": "컴파일러: C:\\MinGW\\bin\\g++.exe"
+//            "group": {
+//               "kind": "build",
+//                "isDefault": true
+//            },
+            
+            "detail": "디버거에서 생성된 작업입니다."
         },
         {
             "type": "cppbuild",
             "label": "C/C++: gcc.exe 활성 파일 빌드",
             "command": "C:\\MinGW\\bin\\gcc.exe",
             "args": [
-                "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
                 "-o",
@@ -125,6 +124,12 @@
                 "$gcc"
             ],
             "group": "build",
+              
+            // "group": {
+            //     "kind": "build",
+            //     "isDefault": true
+            // },
+
             "detail": "컴파일러: C:\\MinGW\\bin\\gcc.exe"
         }
     ]

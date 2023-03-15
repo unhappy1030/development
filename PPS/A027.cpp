@@ -4,22 +4,18 @@
 using namespace std;
 
 string solution(string number, int k) {
-    string answer = "";
-    int* idx = new int[number.length()];
-    int i, n = 0;
-    for(i = 1; i < number.length(); i++){
-        if(number[i-1] < number[i]){
-            idx[n] = i-1;
-            n++;
+    vector<char> table(number.begin(), number.end());
+    for(int i = 0; i < k; i++){
+        for(int j = 0; j < table.size() - 1; j++){
+            if(table[j] < table[j+1]){
+                table.erase(table.begin() + j);
+                break;
+            }
+            else if(j == table.size() - 2){
+                table.erase(table.begin() + j + 1);
+            }
         }
     }
-    n = 0;
-    for(i = 0; i < number.length(); i++){
-        if(i == idx[n] && n < k){
-            n++;
-            continue;
-        }
-        answer+=number[i];
-    }
+    string answer(table.begin(), table.end());
     return answer;
 }
