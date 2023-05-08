@@ -1,3 +1,6 @@
+/* 22100396 송예지 
+Hyperscale AI ChatGPT
+*/
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -48,7 +51,7 @@ int branch_and_bound(vector<Item>& items, int W);
 
 
 int main() {
-    srand(time(NULL));
+    srand(100);
     int n = 1000; // number of items    0~10000
     int W = n*25; // maximum weight of knapsack
     vector<Item> items;
@@ -56,19 +59,19 @@ int main() {
     cout << "[1] Brute force" << endl;
     int brute[3] = {11, 21, 31};
     cout << "-------------------------------------------------------------------------------"<<endl;
-    cout << "|  Number of Items  |   Processing in milliseconds  /  Maximum benefit value   |"<< endl;
+    cout << "|   Number of Items  |   Processing in milliseconds  /  Maximum benefit value   |"<< endl;
     cout << "-------------------------------------------------------------------------------"<<endl;
     for(int i = 0; i<3; i++) {
         for(int j = 0; j<brute[i]; j++) {
-            int benefit = rand_num(10, 100);
-            int weight = rand_num(1, 20);
+            int benefit = rand_num(1, 500);
+            int weight = rand_num(1, 100);
             items.push_back(Item(benefit, weight));
         }
         auto start_time_brute = chrono::high_resolution_clock::now();
         int max_benefit = brute_force(items, W);
         auto end_time_brute = chrono::high_resolution_clock::now();
         double duration_brute = chrono::duration_cast<chrono::microseconds>(end_time_brute - start_time_brute).count()/1000000.0;
-        cout << "|        "<<  brute[i] << "         |     " << fixed << setprecision(2) << "          " << duration_brute << "            /           " << setw(5) << max_benefit <<  "          |"<< endl;
+        cout << "|         "<<  brute[i] << "         |     " << fixed << setprecision(2) << "          " << duration_brute << "            /           " << setw(5) << max_benefit <<  "          |"<< endl;
         items.clear();
     }
     cout << "-------------------------------------------------------------------------------"<<endl;
@@ -83,8 +86,8 @@ int main() {
     cout << "----------------------------------------------------------------------------------"<<endl;
     for(int i = 0; i<4; i++) {
         for(int j = 0; j<GDB[i]; j++) {
-            int benefit = rand_num(10, 100);
-            int weight = rand_num(1, 20);
+            int benefit = rand_num(1, 500);
+            int weight = rand_num(1, 100);
             items.push_back(Item(benefit, weight));
         }
         cout << "!" << endl;
@@ -121,16 +124,16 @@ int rand_num(int a, int b) {
 }
 
 // Brute force solution
-int brute_force(vector<Item>& items, int W) {
+ int brute_force(vector<Item>& items, int W) {
     int n = items.size();
     int max_val = 0;
     
-    for (int i = 0; i < (1 << n); i++) {
+    for (long int i = 0; i < n; i++) {
         int total_weight = 0;
         int total_val = 0;
 
         for (int j = 0; j < n; j++) {
-            if (i | (1 << j) && total_weight + items[j].weight <= W) {
+            if (i | j && total_weight + items[j].weight <= W) {
                 total_weight += items[j].weight;
                 total_val += items[j].benefit;
             }
@@ -143,6 +146,7 @@ int brute_force(vector<Item>& items, int W) {
 
     return max_val;
 }
+
 
 
 
@@ -172,8 +176,8 @@ double greedy(vector<Item>& items, int W) {
 int dynamic_programming(vector<Item>& items, int W) {
     int n = items.size();
     vector<vector<int>> dp(n + 1, vector<int>(W + 1, 0));
-    for (long int i = 1; i <= n; i++) {
-        for (long int j = 1; j <= W; j++) {
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= W; j++) {
             if (items[i - 1].weight <= j) {
                 dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - items[i-1].weight] + items[i - 1].benefit);
             }

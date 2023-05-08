@@ -9,6 +9,7 @@
         "new": "cpp",
         "1.C": "cpp",
         "holy_shit c": "c",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "chrono": "cpp"
     }
 }

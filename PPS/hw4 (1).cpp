@@ -40,7 +40,7 @@ struct Node {
 };
 
 int rand_num(int a, int b);
-int brute_force(vector<Item>& items, int W);
+int brute_force(vector<Item>& items, int W, int idx);
 double greedy(vector<Item>& items, int W);
 int dynamic_programming(vector<Item>& items, int W);
 int branch_and_bound(vector<Item>& items, int W);
@@ -56,7 +56,7 @@ int main() {
     cout << "[1] Brute force" << endl;
     int brute[3] = {11, 21, 31};
     cout << "-------------------------------------------------------------------------------"<<endl;
-    cout << "|  Number of Items  |   Processing in milliseconds  /  Maximum benefit value   |"<< endl;
+    cout << "|   Number of Items  |   Processing in milliseconds  /  Maximum benefit value   |"<< endl;
     cout << "-------------------------------------------------------------------------------"<<endl;
     for(int i = 0; i<3; i++) {
         for(int j = 0; j<brute[i]; j++) {
@@ -65,10 +65,10 @@ int main() {
             items.push_back(Item(benefit, weight));
         }
         auto start_time_brute = chrono::high_resolution_clock::now();
-        int max_benefit = brute_force(items, W);
+        int max_benefit = brute_force(items, W, 0);
         auto end_time_brute = chrono::high_resolution_clock::now();
         double duration_brute = chrono::duration_cast<chrono::microseconds>(end_time_brute - start_time_brute).count()/1000000.0;
-        cout << "|        "<<  brute[i] << "         |     " << fixed << setprecision(2) << "          " << duration_brute << "            /           " << setw(5) << max_benefit <<  "          |"<< endl;
+        cout << "|         "<<  brute[i] << "         |     " << fixed << setprecision(2) << "          " << duration_brute << "            /           " << setw(5) << max_benefit <<  "          |"<< endl;
         items.clear();
     }
     cout << "-------------------------------------------------------------------------------"<<endl;
@@ -87,22 +87,21 @@ int main() {
             int weight = rand_num(1, 20);
             items.push_back(Item(benefit, weight));
         }
-        cout << "!" << endl;
         auto start_time_greedy = chrono::high_resolution_clock::now();
         int max_benefit_greedy = greedy(items, W);
         auto end_time_greedy = chrono::high_resolution_clock::now();
         double duration_greedy = chrono::duration_cast<chrono::microseconds>(end_time_greedy - start_time_greedy).count()/1000000.0;
-        cout << "1" << endl;
+
         auto start_time_dp = chrono::high_resolution_clock::now();
         int max_benefit_dp = dynamic_programming(items, W);
         auto end_time_dp = chrono::high_resolution_clock::now();
         double duration_dp = chrono::duration_cast<chrono::microseconds>(end_time_dp - start_time_dp).count()/1000000.0;
-        cout << "2" << endl;
+
         auto start_time_bb = chrono::high_resolution_clock::now();
         int max_benefit_bb = branch_and_bound(items, W);
         auto end_time_bb = chrono::high_resolution_clock::now();
         double duration_bb = chrono::duration_cast<chrono::microseconds>(end_time_bb - start_time_bb).count() / 1000000.0;
-        cout << "3" << endl;
+
         cout << "|      "<<  setw(4) << GDB[i] << "          |  " <<  setw(6) << max_benefit_greedy << " / " << duration_greedy;
         cout << "   |   " <<  setw(6) << max_benefit_dp << " / " << duration_dp;
         cout << "   |   " <<  setw(6) << max_benefit_bb << " / " << duration_bb << "    |" << endl;
@@ -121,27 +120,42 @@ int rand_num(int a, int b) {
 }
 
 // Brute force solution
-int brute_force(vector<Item>& items, int W) {
-    int n = items.size();
-    int max_val = 0;
+// int brute_force(vector<Item>& items, int W) {
+//     int n = items.size();
+//     int max_val = 0;
     
-    for (int i = 0; i < (1 << n); i++) {
-        int total_weight = 0;
-        int total_val = 0;
+//     for (int i = 0; i < (1 << n); i++) {
+//         int total_weight = 0;
+//         int total_val = 0;
 
-        for (int j = 0; j < n; j++) {
-            if (i | (1 << j) && total_weight + items[j].weight <= W) {
-                total_weight += items[j].weight;
-                total_val += items[j].benefit;
-            }
-        }
+//         for (int j = 0; j < n; j++) {
+//             if (i | (1 << j) && total_weight + items[j].weight <= W) {
+//                 total_weight += items[j].weight;
+//                 total_val += items[j].benefit;
+//             }
+//         }
 
-        if (total_weight <= W) {
-            max_val = max(max_val, total_val);
-        }
+//         if (total_weight <= W) {
+//             max_val = max(max_val, total_val);
+//         }
+//     }
+
+//     return max_val;
+// }
+int brute_force(vector<Item>& items, int W, int idx) {
+    if (idx == items.size()) {
+        return 0;
     }
 
-    return max_val;
+    int without_item = brute_force(items, W, idx + 1);
+
+    if (W - items[idx].weight < 0) {
+        return without_item;
+    }
+
+    int with_item = items[idx].benefit + brute_force(items, W - items[idx].weight, idx + 1);
+
+    return max(with_item, without_item);
 }
 
 
@@ -172,8 +186,8 @@ double greedy(vector<Item>& items, int W) {
 int dynamic_programming(vector<Item>& items, int W) {
     int n = items.size();
     vector<vector<int>> dp(n + 1, vector<int>(W + 1, 0));
-    for (long int i = 1; i <= n; i++) {
-        for (long int j = 1; j <= W; j++) {
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= W; j++) {
             if (items[i - 1].weight <= j) {
                 dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - items[i-1].weight] + items[i - 1].benefit);
             }
