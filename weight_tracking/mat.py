@@ -7,7 +7,7 @@ plt.rc('font', family='NanumGothic', weight='bold', size = 14)
 # CSV 파일에서 체중과 시간 정보 가져오기
 weights = []
 times = []
-with open('weight.csv', mode='r') as file:
+with open('C:/Users/white/Desktop/development/weight_tracking/weight.csv', mode='r') as file:
     reader = csv.reader(file)
     for row in reader:
         time_str = row[0]  # "YYYY-MM-DD hh:mm:ss" 형식의 문자열
